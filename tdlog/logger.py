@@ -6,10 +6,8 @@ import socket
 import time
 
 class TreasureDataLogRecordFormatter:
-    def __init__(self, db, table):
+    def __init__(self):
         self.hostname = socket.gethostname()
-        self.db = db
-        self.table = table
 
     def format(self, record):
         data = {
@@ -25,10 +23,7 @@ class TreasureDataLogRecordFormatter:
         }
         if 'exc_info' in data and data['exc_info']:
             data['exc_info'] = self.formatException(data['exc_info'])
-
-        tag = "td.%s.%s" % (self.db, self.table)
-        packet = [ tag, long(time.time()), data ]
-        return packet
+        return data
 
 class TreasureDataHandler(logging.Handler):
     '''
@@ -51,7 +46,7 @@ class TreasureDataHandler(logging.Handler):
 
         self.pendings = None
         self.packer = msgpack.Packer()
-        self.fmt = TreasureDataLogRecordFormatter(self.db, self.table)
+        self.fmt = TreasureDataLogRecordFormatter()
         try:
             self.socket = self._connect()
         except:
@@ -66,14 +61,17 @@ class TreasureDataHandler(logging.Handler):
     def emit(self, record):
         if record.levelno < self.level: return
 
-        packet = self.fmt.format(record)
+        # packet for td-agent TCP input channel
+        packet = self._make_packet(self.fmt.format(record))
         if self.verbose:
             print packet
         packet = self.packer.pack(packet)
-        
+
+        # buffering
         if self.pendings:
             self.pendings.append(data)
             data = self.pendings
+
         try:
             # reconnect if possible
             self._reconnect()
@@ -109,3 +107,8 @@ class TreasureDataHandler(logging.Handler):
         if self.socket:
             self.socket.close()
         self.socket = None
+
+    def _make_packet(self, data):
+        tag = "td.%s.%s" % (self.db, self.table)
+        packet = [ tag, long(time.time()), data ]
+        return packet
