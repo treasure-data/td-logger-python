@@ -97,7 +97,7 @@ class TreasureDataHandler(logging.Handler):
     def _send_internal(self, bytes):
         # buffering
         if self.pendings:
-            self.pendings.append(bytes)
+            self.pendings += bytes
             bytes = self.pendings
 
         try:
