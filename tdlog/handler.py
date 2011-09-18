@@ -10,12 +10,12 @@ class TreasureDataHandler(logging.Handler):
     Logging Handler for td-agent.
     '''
     def __init__(self,
-                 host='127.0.0.1',
-                 port=24224,
-                 db='logging',
-                 table='default',
-                 bufmax=1*1024*1024,
-                 verbose=False):
+           host='127.0.0.1',
+           port=24224,
+           db='logging',
+           table='default',
+           bufmax=1*1024*1024,
+           verbose=False):
 
         self.host = host
         self.port = port
@@ -82,32 +82,13 @@ class TreasureDataHandler(logging.Handler):
         self.socket = None
 
     def _format_record(self, record):
-        data = { 'msg' : record.getMessage() }
-        if self.verbose:
-            data.update({
-                'module' : record.module,
-                'path'   : record.pathname,
-                'line_num'  : record.lineno,
-                'levelname' : record.levelname,
-                'level_num' : record.levelno,
-                'created'   : record.created})
+        data = record._raw.copy()
+        if 'exc_info' in data and data['exc_info']:
+            data['exc_info'] = self.formatException(data['exc_info'])
         tag = "td.%s.%s" % (self.db, self.table)
 
         packet = [ tag, long(time.time()), data ]
+        if self.verbose:
+            print packet
+
         return self.packer.pack(packet)
-
-def main():
-    logging.basicConfig(level=logging.INFO)
-    logger = logging.getLogger('treasuredata.test')
-
-    test_handler = TreasureDataHandler()
-    logger.addHandler(test_handler)
-
-    js = { "semicolon" : ";", "at" : "@" }
-    logger.info(js)
-
-    for i in range(0, 100):
-        logger.critical('Test')
-
-if __name__ == "__main__":
-    main()
