@@ -63,8 +63,8 @@ class TreasureDataHandler(logging.Handler):
 
     def emit(self, record):
         if record.levelno < self.level: return
-        packet = self._make_packet(self.fmt.format(record))
-        self._send(packet)
+        bytes = self._make_packet(self.fmt.format(record))
+        self._send(bytes)
 
     def _reconnect(self):
         if not self.socket:
