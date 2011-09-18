@@ -63,14 +63,8 @@ class TreasureDataHandler(logging.Handler):
 
     def emit(self, record):
         if record.levelno < self.level: return
-
-        # create packet for td-agent TCP input
         packet = self._make_packet(self.fmt.format(record))
-        if self.verbose:
-            print packet
-        bytes = self.packer.pack(packet)
-
-        self._send(bytes)
+        self._send(packet)
 
     def _reconnect(self):
         if not self.socket:
@@ -89,7 +83,9 @@ class TreasureDataHandler(logging.Handler):
     def _make_packet(self, data):
         tag = "td.%s.%s" % (self.db, self.table)
         packet = [ tag, long(time.time()), data ]
-        return packet
+        if self.verbose:
+            print packet
+        return self.packer.pack(packet)
 
     def _send(self, bytes):
         self.lock.acquire()
