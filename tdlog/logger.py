@@ -4,6 +4,7 @@ import sys, urllib
 import msgpack
 import socket
 import time
+import threading
 
 class TreasureDataLogRecordFormatter:
     def __init__(self):
@@ -48,6 +49,7 @@ class TreasureDataHandler(logging.Handler):
         self.pendings = None
         self.packer = msgpack.Packer()
         self.fmt = TreasureDataLogRecordFormatter()
+        self.lock = threading.Lock()
         try:
             self.socket = self._connect()
         except:
@@ -62,40 +64,13 @@ class TreasureDataHandler(logging.Handler):
     def emit(self, record):
         if record.levelno < self.level: return
 
-        # packet for td-agent TCP input channel
+        # create packet for td-agent TCP input
         packet = self._make_packet(self.fmt.format(record))
         if self.verbose:
             print packet
-        data = self.packer.pack(packet)
+        bytes = self.packer.pack(packet)
 
-        # buffering
-        if self.pendings:
-            self.pendings.append(data)
-            data = self.pendings
-
-        try:
-            # reconnect if possible
-            self._reconnect()
-
-            # send message
-            total = len(data)
-            nsent = 0
-            while nsent < total:
-                n = self.socket.send(data[nsent:])
-                if n <= 0:
-                    raise RuntimeError("socket connection broken")
-                nsent += n
-
-            # send finished
-            self.pendings = None
-        except:
-            # close socket
-            self._close()
-            # clear buffer if it exceeds max bufer size
-            if self.pendings and (len(self.pendings) > self.bufmax):
-                self.pendings = None
-            else:
-                self.pendings = data
+        self._send(bytes)
 
     def _reconnect(self):
         if not self.socket:
@@ -115,3 +90,40 @@ class TreasureDataHandler(logging.Handler):
         tag = "td.%s.%s" % (self.db, self.table)
         packet = [ tag, long(time.time()), data ]
         return packet
+
+    def _send(self, bytes):
+        self.lock.acquire()
+        try:
+            self._send_internal(bytes)
+        finally:
+            self.lock.release()
+
+    def _send_internal(self, bytes):
+        # buffering
+        if self.pendings:
+            self.pendings.append(bytes)
+            bytes = self.pendings
+
+        try:
+            # reconnect if possible
+            self._reconnect()
+
+            # send message
+            total = len(bytes)
+            nsent = 0
+            while nsent < total:
+                n = self.socket.send(bytes[nsent:])
+                if n <= 0:
+                    raise RuntimeError("socket connection broken")
+                nsent += n
+
+            # send finished
+            self.pendings = None
+        except:
+            # close socket
+            self._close()
+            # clear buffer if it exceeds max bufer size
+            if self.pendings and (len(self.pendings) > self.bufmax):
+                self.pendings = None
+            else:
+                self.pendings = bytes
