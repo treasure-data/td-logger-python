@@ -36,3 +36,8 @@ Check out the tests folder for more samples.
     l.info(js)
 
 Have fun!
+
+Special Thanks
+--------------
+
+- [Joshua Kuntz](https://github.com/j3kuntz) for the original work
