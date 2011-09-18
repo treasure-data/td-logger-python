@@ -23,8 +23,8 @@ class TreasureDataLogRecordFormatter:
           'sys_exc_info' : record.exc_info,
           'msg' : record.msg,
         }
-        if 'exc_info' in data and data['exc_info']:
-            data['exc_info'] = self.formatException(data['exc_info'])
+        if 'sys_exc_info' in data and data['sys_exc_info']:
+            data['sys_exc_info'] = self.formatException(data['sys_exc_info'])
         return data
 
 class TreasureDataHandler(logging.Handler):
