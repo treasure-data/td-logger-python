@@ -72,6 +72,7 @@ class TreasureDataHandler(logging.Handler):
 
     def _connect(self):
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
         sock.connect((self.host, self.port))
         return sock
 
