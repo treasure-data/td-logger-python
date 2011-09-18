@@ -3,7 +3,7 @@
 from distutils.core import setup
 
 setup(
-  name='tdlog',
+  name='td-logger',
   version='0.1',
   package_dir={'tdlog': 'tdlog'},
   packages=['tdlog'],
