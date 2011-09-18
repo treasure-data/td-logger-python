@@ -3,7 +3,6 @@ import os
 import sys, urllib
 import msgpack
 import socket
-import time
 import threading
 
 class TreasureDataLogRecordFormatter:
@@ -63,7 +62,9 @@ class TreasureDataHandler(logging.Handler):
 
     def emit(self, record):
         if record.levelno < self.level: return
-        bytes = self._make_packet(self.fmt.format(record))
+        time = long(record.created)
+        data = self.fmt.format(record)
+        bytes = self._make_packet(time, data)
         self._send(bytes)
 
     def _reconnect(self):
@@ -81,9 +82,9 @@ class TreasureDataHandler(logging.Handler):
             self.socket.close()
         self.socket = None
 
-    def _make_packet(self, data):
+    def _make_packet(self, time, data):
         tag = "td.%s.%s" % (self.db, self.table)
-        packet = [ tag, long(time.time()), data ]
+        packet = [ tag, time, data ]
         if self.verbose:
             print packet
         return self.packer.pack(packet)
