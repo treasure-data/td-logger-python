@@ -11,15 +11,16 @@ class TreasureDataLogRecordFormatter:
 
     def format(self, record):
         data = {
-          'host' : self.hostname,
-          'name' : record.name,
-          'module' : record.module,
-          'lineno' : record.lineno,
-          'levelno' : record.levelno,
-          'levelname' : record.levelname,
-          'filename' : record.filename,
-          'funcname' : record.funcName,
-          'exc_info' : record.exc_info,
+          'sys_host' : self.hostname,
+          'sys_name' : record.name,
+          'sys_module' : record.module,
+          'sys_lineno' : record.lineno,
+          'sys_levelno' : record.levelno,
+          'sys_levelname' : record.levelname,
+          'sys_filename' : record.filename,
+          'sys_funcname' : record.funcName,
+          'sys_exc_info' : record.exc_info,
+          'msg' : record.msg,
         }
         if 'exc_info' in data and data['exc_info']:
             data['exc_info'] = self.formatException(data['exc_info'])
