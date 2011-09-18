@@ -68,7 +68,7 @@ class TreasureDataHandler(logging.Handler):
 
     def _reconnect(self):
         if not self.socket:
-            self._connect()
+            self.socket = self._connect()
 
     def _connect(self):
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
