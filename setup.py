@@ -4,7 +4,7 @@ from distutils.core import setup
 
 setup(
   name='td-logger',
-  version='0.2',
+  version='0.3',
   package_dir={'tdlog': 'tdlog'},
   packages=['tdlog'],
   install_requires=['msgpack-python'],
