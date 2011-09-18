@@ -65,7 +65,7 @@ class TreasureDataHandler(logging.Handler):
         packet = self._make_packet(self.fmt.format(record))
         if self.verbose:
             print packet
-        packet = self.packer.pack(packet)
+        data = self.packer.pack(packet)
 
         # buffering
         if self.pendings:
@@ -88,11 +88,13 @@ class TreasureDataHandler(logging.Handler):
             # send finished
             self.pendings = None
         except:
+            # close socket
+            self._close()
             # clear buffer if it exceeds max bufer size
             if self.pendings and (len(self.pendings) > self.bufmax):
                 self.pendings = None
-            # close socket
-            self._close()
+            else:
+                self.pendings = data
 
     def _reconnect(self):
         if not self.socket:
