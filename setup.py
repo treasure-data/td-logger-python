@@ -8,8 +8,8 @@ desc = 'A Python logging handler for Treasure Data Cloud'
 
 setup(
   name='td-logger',
-  version='0.4.1',
-  desciption=desc,
+  version='0.4.2',
+  description=desc,
   long_description=open(README).read(),
   package_dir={'tdlog': 'tdlog'},
   packages=['tdlog'],
