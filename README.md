@@ -19,6 +19,15 @@ confirm these settings are in your /etc/td-agent/td-agent.conf.
       apikey YOUR_API_KEY
     </match>
 
+Install
+-------
+
+    $ easy_install td-logger
+
+or
+
+    $ pip install td-logger
+
 Usage
 -----
 
