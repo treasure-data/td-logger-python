@@ -36,6 +36,7 @@ class TreasureDataHandler(logging.Handler):
            db='log',
            table='default',
            bufmax=1*1024*1024,
+           timeout=3.0,
            verbose=False):
 
         self.host = host
@@ -43,6 +44,7 @@ class TreasureDataHandler(logging.Handler):
         self.db = db
         self.table = table
         self.bufmax = bufmax
+        self.timeout = timeout
         self.verbose = verbose
 
         self.pendings = None
@@ -74,6 +76,7 @@ class TreasureDataHandler(logging.Handler):
     def _connect(self):
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
+        sock.settimeout(self.timeout)
         sock.connect((self.host, self.port))
         return sock
 
