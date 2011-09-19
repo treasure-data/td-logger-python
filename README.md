@@ -4,8 +4,9 @@ td-loger: logging library for Treasure Data Cloud
 Setup
 -----
 
-Before using this logging handler, td-agent must be properly configured. Please
-confirm these settings are in your /etc/td-agent/td-agent.conf.
+Before using this logging handler, td-agent must be properly configured at the
+localhost. Please confirm these settings are in your
+/etc/td-agent/td-agent.conf.
 
     ## built-in TCP input
     <source>
@@ -18,6 +19,10 @@ confirm these settings are in your /etc/td-agent/td-agent.conf.
       type tdlog
       apikey YOUR_API_KEY
     </match>
+
+For more information, please look at the documentation.
+
+* http://docs.treasure-data.com/
 
 Install
 -------
@@ -43,6 +48,29 @@ Check out the tests folder for more samples.
     l.info('Some message')
     js = { "semicolon" : ";", "at" : "@" }
     l.info(js)
+
+This will throw the log entries to the local td-agent. By default, these
+parameters are logged.
+
+* sys_host
+* sys_name
+* sys_module
+* sys_lineno
+* sys_levelno
+* sys_levelname
+* sys_filename
+* sys_funcname
+* sys_exc_info
+* msg
+
+These parameters can be specified at TreasureDataHander constructor.
+
+* host: td-agent host (default: 127.0.0.1)
+* port: td-agent port (default: 24224)
+* db: td database name (default: log)
+* table: td table name (default: default)
+* bufmax: buffer size max when td-agent is unavailable (default: 1*1024*1024)
+* timeout: network timeout (default: 3.0)
 
 Have fun!
 
