@@ -74,6 +74,20 @@ These parameters can be specified at TreasureDataHander constructor.
 
 Have fun!
 
+How to Develop
+--------------
+
+Folloings are the way to setup development envionment on MacOSX.
+
+    $ sudo easy_install virtualenv
+    $ virtualenv --no-site-packages .     
+    New python executable in ./bin/python
+    Installing setuptools............done.
+    Installing pip...............done.
+    $ source bin/activate
+    $ bin/pip install msgpack-python
+    $ python run_tests.py
+
 Special Thanks
 --------------
 
