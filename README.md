@@ -49,8 +49,10 @@ Check out the tests folder for more samples.
     js = { "semicolon" : ";", "at" : "@" }
     l.info(js)
 
-This will throw the log entries to the local td-agent. By default, these
-parameters are logged.
+This will throw the log entries to the local td-agent. And there's an important
+point. This logger accepts only 'dict' and 'json string'.
+
+Also, these parameters are logged by default.
 
 * sys_host
 * sys_name

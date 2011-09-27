@@ -4,6 +4,7 @@ import sys, urllib
 import msgpack
 import socket
 import threading
+import json
 
 class TreasureDataLogRecordFormatter:
     def __init__(self):
@@ -20,11 +21,25 @@ class TreasureDataLogRecordFormatter:
           'sys_filename' : record.filename,
           'sys_funcname' : record.funcName,
           'sys_exc_info' : record.exc_info,
-          'msg' : record.msg,
         }
+        self._structuring(data, record.msg)
         if 'sys_exc_info' in data and data['sys_exc_info']:
             data['sys_exc_info'] = self.formatException(data['sys_exc_info'])
         return data
+
+    def _structuring(self, data, msg):
+        if isinstance(msg, dict):
+            self._add_dic(data, msg)
+        elif isinstance(msg, str):
+            try:
+                self.add_dic(data, json.loads(str(msg)))
+            except:
+                pass
+
+    def _add_dic(self, data, dic):
+        for k, v in dic.items():
+            if isinstance(k, str):
+                data[str(k)] = v
 
 class TreasureDataHandler(logging.Handler):
     '''
