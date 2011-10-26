@@ -1,4 +1,4 @@
-td-loger: logging library for Treasure Data Cloud
+td-logger: logging library for Treasure Data Cloud
 =================================================
 
 Setup
