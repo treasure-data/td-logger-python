@@ -63,7 +63,6 @@ class TreasureDataHandler(logging.Handler):
         self.verbose = verbose
 
         self.pendings = None
-        self.packer = msgpack.Packer()
         self.fmt = TreasureDataLogRecordFormatter()
         self.lock = threading.Lock()
         try:
@@ -104,7 +103,7 @@ class TreasureDataHandler(logging.Handler):
         packet = [ tag, time, data ]
         if self.verbose:
             print packet
-        return self.packer.pack(packet)
+        return msgpack.packb(packet)
 
     def _send(self, bytes):
         self.lock.acquire()
