@@ -1,3 +1,5 @@
+from __future__ import print_function
+
 import logging
 import os
 import sys, urllib
@@ -5,6 +7,10 @@ import msgpack
 import socket
 import threading
 import json
+
+if sys.version > '2':
+    long = int
+
 
 class TreasureDataLogRecordFormatter:
     def __init__(self):
@@ -102,7 +108,7 @@ class TreasureDataHandler(logging.Handler):
         tag = "td.%s.%s" % (self.db, self.table)
         packet = [ tag, time, data ]
         if self.verbose:
-            print packet
+            print(packet)
         return msgpack.packb(packet)
 
     def _send(self, bytes):
