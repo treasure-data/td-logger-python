@@ -32,9 +32,9 @@ class TreasureDataLogRecordFormatter:
             self._add_dic(data, msg)
         elif isinstance(msg, str):
             try:
-                self.add_dic(data, json.loads(str(msg)))
-            except:
-                pass
+                self._add_dic(data, json.loads(str(msg)))
+            except ValueError:
+                self._add_dic(data, { 'msg' : str(msg) })
 
     def _add_dic(self, data, dic):
         for k, v in dic.items():
