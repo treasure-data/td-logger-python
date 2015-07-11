@@ -5,3 +5,6 @@ dist/
 *.un~
 *.swp
 *.swo
+
+.eggs/
+*.egg-info/
