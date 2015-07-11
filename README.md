@@ -12,7 +12,7 @@ localhost. Please confirm these settings are in your
     <source>
       type tcp
     </source>
-    
+
     # Treasure Data output
     # match events whose tag is td.DATABASE.TABLE
     <match td.*.*>
@@ -40,7 +40,7 @@ Check out the tests folder for more samples.
 
     import logging
     from tdlog import logger
-    
+
     logging.basicConfig(level=logging.INFO)
     l = logging.getLogger('td_logger.test')
     l.addHandler(logger.TreasureDataHandler())
@@ -82,13 +82,16 @@ How to Develop
 Folloings are the way to setup development envionment on MacOSX.
 
     $ sudo easy_install virtualenv
-    $ virtualenv --no-site-packages .     
+    $ virtualenv --no-site-packages .
     New python executable in ./bin/python
     Installing setuptools............done.
     Installing pip...............done.
     $ source bin/activate
     $ bin/pip install msgpack-python
-    $ python run_tests.py
+
+Runing tests
+
+    $ python setup.py tests
 
 Special Thanks
 --------------
