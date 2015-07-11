@@ -91,7 +91,7 @@ Folloings are the way to setup development envionment on MacOSX.
 
 Runing tests
 
-    $ python setup.py tests
+    $ python setup.py test
 
 Special Thanks
 --------------
