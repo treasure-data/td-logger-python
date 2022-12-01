@@ -79,7 +79,7 @@ Have fun!
 How to Develop
 --------------
 
-Folloings are the way to setup development envionment on MacOSX.
+Following are the way to setup development environment on MacOSX.
 
     $ sudo easy_install virtualenv
     $ virtualenv --no-site-packages .
@@ -89,7 +89,7 @@ Folloings are the way to setup development envionment on MacOSX.
     $ source bin/activate
     $ bin/pip install msgpack-python
 
-Runing tests
+Running tests
 
     $ python setup.py test
 
